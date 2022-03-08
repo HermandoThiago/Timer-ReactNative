@@ -19,7 +19,7 @@ export default function Contador(props){
             <Text style={styles.textContador}>{props.Segundos}</Text>
           </View>
 
-          <TouchableOpacity onPress={() => props.setEstado('selecionar')} style={styles.btnIniciar}>
+          <TouchableOpacity onPress={() => props.SetarEstado('selecionar')} style={styles.btnIniciar}>
                 <Text style={{fontWeight:'bold', fontSize:20, color:'white'}}>Resetar</Text>
         </TouchableOpacity>
 
