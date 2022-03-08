@@ -3,12 +3,13 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import { LinearGradient } from 'expo-linear-gradient';
-import {  } from 'react-native-web';
+import Contador from './Contador'
 
 export default function App() {
   
   const [Segundos, setSegundos] = useState(0)
   const [Minutos, setMinutos] = useState(0)
+  const [Estado, setEstado] = useState('selecionar')
 
   let numbers = []
 
@@ -18,96 +19,120 @@ export default function App() {
 
   const [AlarmeSound, setAlarmeSound] = useState([
     {
+      id:1,
       selecionado: true,
       sound: 'alarme1'
     },
     {
+      id:2,
       selecionado: false,
       sound:'alarme2'
     }
   ])
 
-  return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
+  function setarAlarme(id){
+    alert('alarme alterado')
 
-      <LinearGradient
-        // Background Linear Gradient
-        colors={['rgba(0,0,0,0.8)', 'transparent']}
-        style={styles.background}
-      />
+    let alarmesTemp = AlarmeSound.map((val => {
+      if(id != val.id)
+        val.selecionado = false;
+      else
+        val.selecionado = true;
+      return val;
+    }))
+    setAlarmeSound(alarmesTemp)
+  }
 
-      <Text style={styles.textTime}>Selecione o seu tempo</Text>
-      
-      <View style={{flexDirection:'row'}}>
-        
-        <Text style={styles.textPicker}>Min:</Text>
-        
-        <Picker 
-        style={styles.pickerStyles}
-        selectedValue={Minutos}
-        onValueChange={(itemValue, itemIndex) => {
-          setMinutos(itemValue)
-        }}
-        >
-          {
-            numbers.map((val) => {
-              return(
-                <Picker.Item label={val.toString()} value={val.toString()} />
-              );
-            })
-          }
-        </Picker>
-        
-        <Text style={styles.textPicker}>Seg:</Text>
-        
-        <Picker 
-        style={styles.pickerStyles} 
-        selectedValue={Segundos}
-        onValueChange={(itemValue, itemIndex) => {
-          setSegundos(itemValue)
-        }}>
+  if(Estado == 'selecionar'){
+      return (
+        <View style={styles.container}>
+          <StatusBar style="auto" />
+
+          <LinearGradient
+            // Background Linear Gradient
+            colors={['rgba(0,0,0,0.8)', 'transparent']}
+            style={styles.background}
+          />
+
+          <Text style={styles.textTime}>Selecione o seu tempo</Text>
           
-          <Picker.Item label='0' value='0' />
-          
-          {
-            numbers.map((val) => {
-              return(
-                <Picker.Item label={val.toString()} value={val.toString()} />
-              );
-            })
-          }
-        
-        </Picker>
-      
-      </View>
-
-      <View style={{flexDirection:'row', marginTop:20}}>
-
-          {
-            AlarmeSound.map((val) => {
-              
-              if(val.selecionado){
-                return(
-                  <TouchableOpacity style={styles.btnSoundSelecionado}>
-                    <Text style={{color:'white', textAlign:'center'}}>{val.sound}</Text>
-                  </TouchableOpacity>
-                );
-              }else{
-                return(
-                  <TouchableOpacity style={styles.btnSound}>
-                    <Text style={{color:'white', textAlign:'center'}}>{val.sound}</Text>
-                  </TouchableOpacity>
-                );
+          <View style={{flexDirection:'row'}}>
+            
+            <Text style={styles.textPicker}>Min:</Text>
+            
+            <Picker 
+            style={styles.pickerStyles}
+            selectedValue={Minutos}
+            onValueChange={(itemValue, itemIndex) => {
+              setMinutos(itemValue)
+            }}
+            >
+              {
+                numbers.map((val) => {
+                  return(
+                    <Picker.Item label={val.toString()} value={val.toString()} />
+                  );
+                })
               }
+            </Picker>
+            
+            <Text style={styles.textPicker}>Seg:</Text>
+            
+            <Picker 
+            style={styles.pickerStyles} 
+            selectedValue={Segundos}
+            onValueChange={(itemValue, itemIndex) => {
+              setSegundos(itemValue)
+            }}>
               
-            })
-          }
+              <Picker.Item label='0' value='0' />
+              
+              {
+                numbers.map((val) => {
+                  return(
+                    <Picker.Item label={val.toString()} value={val.toString()} />
+                  );
+                })
+              }
+            
+            </Picker>
+          
+          </View>
 
-      </View>
+          <View style={{flexDirection:'row', marginTop:20}}>
 
-    </View>
-  );
+              {
+                AlarmeSound.map((val) => {
+                  
+                  if(val.selecionado){
+                    return(
+                      <TouchableOpacity onPress={() => setarAlarme(val.id)} style={styles.btnSoundSelecionado}>
+                        <Text style={{color:'white', textAlign:'center'}}>{val.sound}</Text>
+                      </TouchableOpacity>
+                    );
+                  }else{
+                    return(
+                      <TouchableOpacity onPress={() => setarAlarme(val.id)} style={styles.btnSound}>
+                        <Text style={{color:'white', textAlign:'center'}}>{val.sound}</Text>
+                      </TouchableOpacity>
+                    );
+                  }
+                  
+                })
+              }
+
+          </View>
+              <TouchableOpacity onPress={() => setEstado('iniciar')} style={styles.btnIniciar}>
+                <Text style={{fontWeight:'bold', fontSize:20, color:'white'}}>Iniciar</Text>
+              </TouchableOpacity>
+        </View>
+      );
+
+  }else if(Estado == 'iniciar'){
+          return(
+            <Contador Minutos={Minutos} Segundos={Segundos}></Contador>
+          )
+        }
 }
 
 const styles = StyleSheet.create({
@@ -151,6 +176,19 @@ const styles = StyleSheet.create({
     padding:8,
     backgroundColor:'rgba(80, 50, 168, 0.4)',
     borderRadius:20,
-    marginRight:12
+    marginRight:12,
+    borderWidth:1,
+    borderColor:'white'
+  },
+  btnIniciar:{
+    backgroundColor:'rgb(80, 50, 168)',
+    width:110,
+    height:110,
+    borderRadius:55,
+    borderWidth:10,
+    marginTop:35,
+    borderColor:'rgba(80, 50, 168, 0.4)',
+    alignItems:'center',
+    justifyContent:'center'
   }
 });
