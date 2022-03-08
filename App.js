@@ -8,7 +8,7 @@ import Contador from './Contador'
 export default function App() {
   
   const [Segundos, setSegundos] = useState(0)
-  const [Minutos, setMinutos] = useState(0)
+  const [Minutos, setMinutos] = useState(1)
   const [Estado, setEstado] = useState('selecionar')
 
   let numbers = []
@@ -130,7 +130,7 @@ export default function App() {
 
   }else if(Estado == 'iniciar'){
           return(
-            <Contador Minutos={Minutos} Segundos={Segundos}></Contador>
+            <Contador SetarEstado={setEstado} Minutos={Minutos} Segundos={Segundos}></Contador>
           )
         }
 }
