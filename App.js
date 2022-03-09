@@ -21,18 +21,18 @@ export default function App() {
     {
       id:1,
       selecionado: true,
-      sound: 'alarme1'
+      sound: 'alarme-clock',
+      file: require('./sounds/alarme-clock.mp3')
     },
     {
       id:2,
       selecionado: false,
-      sound:'alarme2'
+      sound:'psycho-sound',
+      file: require('./sounds/psycho-sound.mp3')
     }
   ])
 
   function setarAlarme(id){
-    alert('alarme alterado')
-
     let alarmesTemp = AlarmeSound.map((val => {
       if(id != val.id)
         val.selecionado = false;
@@ -136,6 +136,7 @@ export default function App() {
             SetarEstado={setEstado}
             Minutos={Minutos}
             Segundos={Segundos}
+            alarmes={AlarmeSound}
             ></Contador>
           )
         }
