@@ -130,7 +130,13 @@ export default function App() {
 
   }else if(Estado == 'iniciar'){
           return(
-            <Contador SetarEstado={setEstado} Minutos={Minutos} Segundos={Segundos}></Contador>
+            <Contador
+            setarMinutos={setMinutos}
+            setarSegundos={setSegundos}
+            SetarEstado={setEstado}
+            Minutos={Minutos}
+            Segundos={Segundos}
+            ></Contador>
           )
         }
 }

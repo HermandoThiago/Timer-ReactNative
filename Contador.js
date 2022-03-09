@@ -1,9 +1,58 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Contador(props){
+
+    let done = false;
+
+    useEffect(() => {
+
+        const timer = setInterval(() => {
+
+           props.setarSegundos(props.Segundos - 1)
+
+           if(props.Segundos <= 0){
+               if(props.Minutos > 0){
+                   props.setarMinutos(props.Minutos - 1);
+                   props.setarSegundos(59);
+               }else{
+                   if(!done){
+                       done = true;
+                       props.SetarEstado('selecionar')
+                       props.setarMinutos(1);
+                       props.setarSegundos(0);
+                   }
+               }
+           }
+
+        }, 1000)
+
+        return () => clearInterval(timer)
+
+    })
+
+    function resetar(){
+        props.SetarEstado('selecionar')
+        props.setarMinutos(1);
+        props.setarSegundos(0);
+    }
+
+    function formatarNumero(number){
+        let finalNumber = ""
+
+        if(number < 10){
+            finalNumber = "0"+number;
+        }else{
+            finalNumber = number;
+        }
+
+        return finalNumber;
+    }
+
+    let segundos = formatarNumero(props.Segundos)
+    let minutos = formatarNumero(props.Minutos)
 
     return(
         <View style={styles.container}>
@@ -15,13 +64,13 @@ export default function Contador(props){
           />
 
           <View style={{flexDirection:'row'}}>
-            <Text style={styles.textContador}>{props.Minutos} : </Text>
-            <Text style={styles.textContador}>{props.Segundos}</Text>
+            <Text style={styles.textContador}>{minutos} : </Text>
+            <Text style={styles.textContador}>{segundos}</Text>
           </View>
 
-          <TouchableOpacity onPress={() => props.SetarEstado('selecionar')} style={styles.btnIniciar}>
+          <TouchableOpacity onPress={() => resetar()} style={styles.btnIniciar}>
                 <Text style={{fontWeight:'bold', fontSize:20, color:'white'}}>Resetar</Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
 
         </View>
     );
